@@ -25,7 +25,15 @@ const envVarsSchema = Joi.object()
     SMTP_PORT: Joi.number().description('port to connect to the email server'),
     SMTP_USERNAME: Joi.string().description('username for email server'),
     SMTP_PASSWORD: Joi.string().description('password for email server'),
-    EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app')
+    EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
+    AWS_ACCESS_KEY_ID: Joi.string().description('AWS access key ID'),
+    AWS_SECRET_ACCESS_KEY: Joi.string().description('AWS secret access key'),
+    AWS_REGION: Joi.string().description('AWS region'),
+    AWS_ACCOUNT_ID: Joi.string().description('AWS account ID'),
+    AWS_TOPIC_ARN: Joi.string().description('AWS SNS topic ARN'),
+    AWS_TOPIC_NAME: Joi.string().description('AWS SNS topic name'),
+    EMAIL: Joi.string().description('email to subscribe to the AWS SNS topic'),
+    AWS_QUEUE_URL: Joi.string().description('AWS SQS queue URL')
   })
   .unknown();
 
@@ -57,5 +65,15 @@ export default {
       }
     },
     from: envVars.EMAIL_FROM
+  },
+  aws: {
+    accessKeyId: envVars.AWS_ACCESS_KEY_ID,
+    secretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
+    region: envVars.AWS_REGION,
+    accountId: envVars.AWS_ACCOUNT_ID,
+    topicArn: envVars.AWS_TOPIC_ARN,
+    topicName: envVars.AWS_TOPIC_NAME,
+    email: envVars.EMAIL,
+    queueUrl: envVars.AWS_QUEUE_URL
   }
 };

@@ -11,7 +11,8 @@ import {
   UpdateProductResponse
 } from '../types/product';
 import { queryProducts } from '../helpers/pagination.helper';
-import e from 'express';
+import config from '../config/config';
+import { sendMessage } from '../aws/sqs';
 
 export default class ProductService {
   /**
@@ -26,6 +27,9 @@ export default class ProductService {
           ...body
         }
       });
+      const queueUrl = config.aws.queueUrl;
+      // send message to sqs
+      await sendMessage(queueUrl, JSON.stringify(product));
 
       return {
         data: {
