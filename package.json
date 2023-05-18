@@ -39,7 +39,7 @@
     "eslint",
     "prettier"
   ],
-  "author": "Antonio Lázaro",
+  "author": "Osemeke Echenim",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
