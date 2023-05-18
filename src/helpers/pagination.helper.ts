@@ -16,7 +16,6 @@ export const queryProducts = async <Key extends keyof Products>(
   const sortBy = options.sortBy;
   const sortType = options.sortType ?? 'desc';
 
-  console.log('sortBy', limit, page, sortBy, sortType);
   const products = await prisma.products.findMany({
     where: filter as Prisma.ProductsWhereInput,
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
