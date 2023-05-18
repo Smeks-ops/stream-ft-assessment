@@ -58,8 +58,6 @@ export async function receiveMessages(
       console.log('Received messages:');
       messages.forEach((message) => {
         console.log('Message:', message.Body);
-        // Delete the message from the queue
-        // deleteMessage(queueUrl, message.ReceiptHandle!);
       });
     } else {
       console.log('No messages received.');
@@ -83,23 +81,3 @@ export async function deleteMessage(queueUrl: string, receiptHandle: string): Pr
     console.error('Error deleting message:', error);
   }
 }
-
-// Usage
-// async function main(): Promise<void> {
-//   const queueName = 'FirstQueue';
-//   const messageBody = 'Hello, SQS!';
-//   const maxNumberOfMessages = 10;
-
-//   // Create the SQS queue
-//   await createQueue(queueName);
-
-//   // Send a message to the SQS queue
-//   const queueUrl = `https://sqs.${config.aws.region}.amazonaws.com/${config.aws.accountId}/${queueName}`;
-//   await sendMessage(queueUrl, messageBody);
-
-//   // Receive messages from the SQS queue
-//   await receiveMessages(queueUrl, maxNumberOfMessages);
-// }
-
-// // Run the script
-// main();
