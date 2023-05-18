@@ -13,6 +13,8 @@ import {
 import { queryProducts } from '../helpers/pagination.helper';
 import config from '../config/config';
 import { sendMessage } from '../aws/sqs';
+import { processSQSMessages } from '../aws/lambda';
+import { publishMessage } from '../aws/sns';
 
 export default class ProductService {
   /**
@@ -101,6 +103,15 @@ export default class ProductService {
           ...body
         }
       });
+
+      const { quantity } = product;
+
+      const threshold = config.productThreshold || 10;
+
+      // send notification if quantity is less than threshold
+      if (quantity < threshold) {
+        await publishMessage(product.id, quantity, product.name);
+      }
       return {
         data: product,
         status: 'success',

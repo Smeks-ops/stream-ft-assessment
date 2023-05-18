@@ -46,10 +46,14 @@ async function subscribeToTopic(
 }
 
 // Publish a message to the SNS topic
-async function publishMessage(topicArn: string, message: string): Promise<void> {
+export async function publishMessage(
+  productId: number,
+  quantity: number,
+  name: string
+): Promise<void> {
   const params: AWS.SNS.PublishInput = {
-    TopicArn: topicArn,
-    Message: message
+    TopicArn: config.aws.topicArn,
+    Message: `Product with name ${name} and id ${productId} quantity has fallen below the threshold. Current quantity: ${quantity}`
   };
 
   try {
@@ -61,22 +65,22 @@ async function publishMessage(topicArn: string, message: string): Promise<void> 
 }
 
 // Usage example
-async function main(): Promise<void> {
-  const topicName = config.aws.topicName;
-  const endpoint = config.aws.email;
-  const protocol = 'email';
-  const message = 'Hello, SNS!';
+// async function main(): Promise<void> {
+//   const topicName = config.aws.topicName;
+//   const endpoint = config.aws.email;
+//   const protocol = 'email';
+//   const message = 'Hello, SNS!';
 
-  // Create the SNS topic
-  const createTopicResponse = await createTopic(topicName);
-  const topicArn = config.aws.topicArn;
+//   // Create the SNS topic
+//   const createTopicResponse = await createTopic(topicName);
+//   const topicArn = config.aws.topicArn;
 
-  // Subscribe an endpoint to the SNS topic
-  await subscribeToTopic(topicArn, endpoint, protocol);
+//   // Subscribe an endpoint to the SNS topic
+//   await subscribeToTopic(topicArn, endpoint, protocol);
 
-  // Publish a message to the SNS topic
-  await publishMessage(topicArn, message);
-}
+// Publish a message to the SNS topic
+// await publishMessage(topicArn, message);
+// }
 
-// Run the script
-main();
+// // Run the script
+// main();

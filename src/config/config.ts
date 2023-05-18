@@ -33,7 +33,8 @@ const envVarsSchema = Joi.object()
     AWS_TOPIC_ARN: Joi.string().description('AWS SNS topic ARN'),
     AWS_TOPIC_NAME: Joi.string().description('AWS SNS topic name'),
     EMAIL: Joi.string().description('email to subscribe to the AWS SNS topic'),
-    AWS_QUEUE_URL: Joi.string().description('AWS SQS queue URL')
+    AWS_QUEUE_URL: Joi.string().description('AWS SQS queue URL'),
+    PRODUCT_THRESHOLD: Joi.number().description('Product threshold')
   })
   .unknown();
 
@@ -75,5 +76,6 @@ export default {
     topicName: envVars.AWS_TOPIC_NAME,
     email: envVars.EMAIL,
     queueUrl: envVars.AWS_QUEUE_URL
-  }
+  },
+  productThreshold: envVars.PRODUCT_THRESHOLD
 };
