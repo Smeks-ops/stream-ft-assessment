@@ -1,5 +1,5 @@
 // Load the AWS SDK for Node.js
-import config from '../config/config';
+import config from '../../config/config';
 import * as AWS from 'aws-sdk';
 
 // Set up AWS configuration

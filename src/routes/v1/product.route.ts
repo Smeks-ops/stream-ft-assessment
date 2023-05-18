@@ -8,13 +8,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(validate(productValidation.createProduct), productController.createProduct)
-  .get(productController.getProducts);
+  .post(auth(), validate(productValidation.createProduct), productController.createProduct)
+  .get(auth(), productController.getProducts);
 
 router
   .route('/:id')
-  .get(productController.getProductById)
-  .put(validate(productValidation.updateProduct), productController.updateProduct)
-  .delete(productController.deleteProduct);
+  .get(auth(), productController.getProductById)
+  .put(auth(), validate(productValidation.updateProduct), productController.updateProduct)
+  .delete(auth(), productController.deleteProduct);
 
 export default router;

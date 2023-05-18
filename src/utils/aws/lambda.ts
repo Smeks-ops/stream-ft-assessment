@@ -1,4 +1,4 @@
-import { SQSEvent, SQSRecord } from 'aws-lambda';
+import { SQSEvent } from 'aws-lambda';
 
 export const processSQSMessages = async (event: SQSEvent): Promise<void> => {
   try {

@@ -12,9 +12,8 @@ import {
 } from '../types/product';
 import { queryProducts } from '../helpers/pagination.helper';
 import config from '../config/config';
-import { sendMessage } from '../aws/sqs';
-import { processSQSMessages } from '../aws/lambda';
-import { publishMessage } from '../aws/sns';
+import { sendMessage } from '../utils/aws/sqs';
+import { publishMessage } from '../utils/aws/sns';
 
 export default class ProductService {
   /**
