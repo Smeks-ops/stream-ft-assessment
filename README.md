@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/96faad67ba7e4eb691d1f024a424591f)](https://app.codacy.com/gh/Smeks-ops/stream-ft-assessment/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 Online Marketplace Inventory Management
 =======================================
 
