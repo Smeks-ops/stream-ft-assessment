@@ -120,13 +120,6 @@ npm dev
 
 This will start the application and make it accessible at `http://localhost:3000`.
 
-Testing
--------
-
-To run the tests, use the following command:
-npm test
-This will execute the test suites and provide feedback on the test results.
-
 Deployment
 ----------
 
