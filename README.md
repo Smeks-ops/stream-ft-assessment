@@ -1,194 +1,147 @@
-# RESTful API Node Server Boilerplate
+Online Marketplace Inventory Management
+=======================================
 
-A boilerplate/starter project for quickly building RESTful APIs using [Node.js](https://nodejs.org), [TypeScript](https://www.typescriptlang.org), [Express](https://expressjs.com), and [Prisma](https://www.prisma.io).
+This repository contains the source code for a simple online marketplace inventory management system implemented using TypeScript, Node.js, Amazon SQS, SNS, Lambda, Docker, and a chosen ORM (e.g., Prisma, TypeORM, Sequelize). The system allows users to manage products, receive notifications when product quantities are low, and integrates with AWS services for messaging and event processing.
 
-This project is an adaptation of the project [RESTful API Node Server Boilerplate](https://github.com/hagopj13/node-express-boilerplate) using a [PostgreSQL](https://www.postgresql.org) database with [Prisma](https://www.prisma.io) ORM. Many of the files are just an adaptation to [TypeScript](https://www.typescriptlang.org) from the files of the previously mentioned project.
+Table of Contents
+-----------------
 
-## Quick Start
+-   [Objective]
+-   [Requirements]
+-   [Project Structure]
+-   [Installation]
+-   [Configuration]
+-   [Usage]
+-   [Testing]
+-   [Deployment]
+-   [API Endpoints]
+-   [Documentation]
+-   [Features]
+-   [What's Left Out]
+-   [Contributing]
+-   [License]
 
-Clone the repo:
+Objective
+---------
 
-```bash
-git clone --depth 1 https://github.com/antonio-lazaro/prisma-express-typescript-boilerplate.git
-cd prisma-express-typescript-boilerplate
-npx rimraf ./.git
-```
+The objective of this take-home assignment is to create a simple online marketplace inventory management system. The system should allow users to perform CRUD operations on products, send messages to an SQS queue when a product is created, consume messages from the queue using a Lambda function, and send SNS notifications when the quantity of a product falls below a certain threshold.
 
-Install the dependencies:
+Requirements
+------------
 
-```bash
-yarn install
-```
+To run the application, you need to have the following installed on your system:
 
-Set the environment variables:
+-   Node.js (v14 or later)
+-   Docker
 
-```bash
-cp .env.example .env
+Project Structure
+-----------------
 
-# open .env and modify the environment variables (if needed)
-```
+The project has the following structure:
 
-## Table of Contents
+- src/
 
-- [Features](#features)
-- [Commands](#commands)
-- [Environment Variables](#environment-variables)
-- [Project Structure](#project-structure)
-- [API Documentation](#api-documentation)
-- [Error Handling](#error-handling)
-- [Validation](#validation)
-- [Authentication](#authentication)
-- [Authorization](#authorization)
-- [Logging](#logging)
-- [Linting](#linting)
-- [Contributing](#contributing)
+  - controllers/
 
-## Features
+    - auth.controller.ts
+    - users.controller
+    - product.controller.ts
 
-- **SQL database**: [PostgreSQL](https://www.postgresql.org) object data modeling using [Prisma](https://www.prisma.io) ORM
-- **Authentication and authorization**: using [passport](http://www.passportjs.org)
-- **Validation**: request data validation using [Joi](https://joi.dev)
-- **Logging**: using [winston](https://github.com/winstonjs/winston) and [morgan](https://github.com/expressjs/morgan)
-- `future` **Testing**: unit and integration tests using [Jest](https://jestjs.io)
-- **Error handling**: centralized error handling mechanism
-- **API documentation**: with [swagger-jsdoc](https://github.com/Surnet/swagger-jsdoc) and [swagger-ui-express](https://github.com/scottie1984/swagger-ui-express)
-- **Process management**: advanced production process management using [PM2](https://pm2.keymetrics.io)
-- **Dependency management**: with [Yarn](https://yarnpkg.com)
-- **Environment variables**: using [dotenv](https://github.com/motdotla/dotenv) and [cross-env](https://github.com/kentcdodds/cross-env#readme)
-- **Security**: set security HTTP headers using [helmet](https://helmetjs.github.io)
-- **Santizing**: sanitize request data against xss and query injection
-- **CORS**: Cross-Origin Resource-Sharing enabled using [cors](https://github.com/expressjs/cors)
-- **Compression**: gzip compression with [compression](https://github.com/expressjs/compression)
-- **Docker support**
-- **Code coverage**: using [coveralls](https://coveralls.io)
-- **Code quality**: with [Codacy](https://www.codacy.com)
-- **Git hooks**: with [Husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged)
-- **Linting**: with [ESLint](https://eslint.org) and [Prettier](https://prettier.io)
-- **Editor config**: consistent editor configuration using [EditorConfig](https://editorconfig.org)
 
-## Commands
+  - services/
+    
+    - auth.service.ts
+    - users.service.ts
+    - product.service.ts
 
-Running locally:
+  - routes/
+    
+    - auth.routes.ts
+    - users.routes.ts
+    - product.routes.ts
 
-```bash
-yarn dev
-```
+  - utils/
 
-Running in production:
+    - aws/
+        - lambda.ts
+        - sns.ts
+        - sqs.ts
 
-```bash
-yarn start
-```
+  - app.ts
+  - client.ts
+  - index.ts
 
-Testing:
 
-```bash
-# run all tests
-yarn test
+- package.json
 
-# run all tests in watch mode
-yarn test:watch
+- tsconfig.json
 
-# run test coverage
-yarn coverage
-```
+- Dockerfile
+-   `src/`: Contains the source code for the application.
+    -   `controllers/`: Contains the controllers responsible for handling HTTP requests and responses.
+    -   `services/`: Contains the business logic and services.
+    -   `routes/`: Contains the route handlers for different endpoints.
+    -   `utils/`: Contains utility functions for working with AWS SQS and SNS.
+    -   `index.ts`: The entry point of the application.
+-   `package.json`: Contains the project dependencies and scripts.
+-   `tsconfig.json`: The TypeScript configuration file.
+-   `Dockerfile`: The Docker configuration file for containerizing the application.
+Installation
+------------
 
-Database:
+1.  Clone the repository:
+git clone <https://github.com/Smeks-ops/stream-ft-assessment>
 
-```bash
-# push changes to db
-yarn db:push
+2.  Install the dependencies:
+    cd stream-ft-assessment
 
-# start prisma studio
-yarn db:studio
-```
+    npm install
 
-Docker:
+Configuration
+-------------
 
-```bash
-# run docker container in development mode
-yarn docker:dev
+Before running the application, you need to configure the following environment variables:
 
-# run docker container in production mode
-yarn docker:prod
+-   `DATABASE_URL`: The URL of your PostgreSQL database.
+-   `AWS_REGION`: The AWS region where your SQS and SNS resources are located.
+-   `AWS_ACCESS_KEY_ID`: The AWS access key ID with the necessary permissions.
+-   `AWS_SECRET_ACCESS_KEY`: The AWS secret access key corresponding to the access key ID.
 
-# run all tests in a docker container
-yarn docker:test
+You can set these environment variables in a `.env` file located in the root directory of the project.
 
-# run docker container with PostgreSQL db
-yarn docker:dev-db:start
+Usage
+-----
 
-# stop docker container with PostgreSQL db
-yarn docker:dev-db:stop
-```
-
-Linting:
+To start the application, run the following command:
 
 ```bash
-# run ESLint
-yarn lint
-
-# fix ESLint errors
-yarn lint:fix
-
-# run prettier
-yarn prettier
-
-# fix prettier errors
-yarn prettier:fix
+npm dev
 ```
 
-## Environment Variables
+This will start the application and make it accessible at `http://localhost:3000`.
 
-The environment variables can be found and modified in the `.env` file. They come with these default values:
+Testing
+-------
 
-```bash
-# Port number
-PORT=3000
+To run the tests, use the following command:
+npm test
+This will execute the test suites and provide feedback on the test results.
 
-# URL of the PostgreSQL database
-DATABASE_URL=postgresql://postgres:secret@localhost:5432/mydb?schema=public
+Deployment
+----------
 
-# JWT
-# JWT secret key
-JWT_SECRET=thisisasamplesecret
-# Number of minutes after which an access token expires
-JWT_ACCESS_EXPIRATION_MINUTES=30
-# Number of days after which a refresh token expires
-JWT_REFRESH_EXPIRATION_DAYS=30
-
-# SMTP configuration options for the email service
-# For testing, you can use a fake SMTP service like Ethereal: https://ethereal.email/create
-SMTP_HOST=email-server
-SMTP_PORT=587
-SMTP_USERNAME=email-server-username
-SMTP_PASSWORD=email-server-password
-EMAIL_FROM=support@yourapp.com
+To deploy the application, you can use Docker. The repository includes a `Dockerfile` that builds a Docker image for the application. You can build the Docker image using the following command:
 ```
-
-## Project Structure
-
+docker build -t online-marketplace .
 ```
-src\
- |--config\         # Environment variables and configuration related things
- |--controllers\    # Route controllers (controller layer)
- |--docs\           # Swagger files
- |--middlewares\    # Custom express middlewares
- |--models\         # Mongoose models (data layer)
- |--routes\         # Routes
- |--services\       # Business logic (service layer)
- |--utils\          # Utility classes and functions
- |--validations\    # Request data validation schemas
- |--app.js          # Express app
- |--index.js        # App entry point
+Once the image is built, you can run the container using the following command:
 ```
+docker run -p 3000:3000 online-marketplace
+```
+The application will be accessible at `http://localhost:3000`.
 
-## API Documentation
-
-To view the list of available APIs and their specifications, run the server and go to `http://localhost:3000/v1/docs` in your browser. This documentation page is automatically generated using the [swagger](https://swagger.io/) definitions written as comments in the route files.
-
-### API Endpoints
-
+API Endpoints
+------------------
 List of available routes:
 
 **Auth routes**:\
@@ -207,226 +160,45 @@ List of available routes:
 `PATCH /v1/users/:userId` - update user\
 `DELETE /v1/users/:userId` - delete user
 
-## Error Handling
+**Product routes**:\
+`POST /v1/products` - create a product\
+`GET /v1/products` - get all products\
+`GET /v1/products/:productId` - get product\
+`PUT /v1/products/:productId` - update product\
+`DELETE /v1/products/:productId` - delete product
 
-The app has a centralized error handling mechanism.
+Documentation
+------------------
 
-Controllers should try to catch the errors and forward them to the error handling middleware (by calling `next(error)`). For convenience, you can also wrap the controller inside the catchAsync utility wrapper, which forwards the error.
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/16662064-bae992f3-32c1-4dfb-908b-418977d733a1?action=collection%2Ffork&collection-url=entityId%3D16662064-bae992f3-32c1-4dfb-908b-418977d733a1%26entityType%3Dcollection%26workspaceId%3D5edad285-5775-4d3e-ad3f-d1675fa2e5e1)
 
-```javascript
-const catchAsync = require('../utils/catchAsync');
 
-const controller = catchAsync(async (req, res) => {
-  // this error will be forwarded to the error handling middleware
-  throw new Error('Something wrong happened');
-});
-```
+Features
+-------------------
 
-The error handling middleware sends an error response, which has the following format:
+The following features were implemented on the inventory management system:
 
-```json
-{
-  "code": 404,
-  "message": "Not found"
-}
-```
+-   The creation of CRUD endpoints for the products.
+-   An authentication system for users using JWT.
+-   CRUD endpoints for users.
+-   Implemented pagination and sorting for the `GET /products` endpoint to retrieve products in a controlled manner.
+-   AWS lambda, sqs and sns implementations
 
-When running in development mode, the error response also contains the error stack.
+What's Left Out
+-------------------
+The following features are yet to be done:
 
-The app has a utility ApiError class to which you can attach a response code and a message, and then throw it from anywhere (catchAsync will catch it).
+-   Implementing a search feature to filter products based on criteria such as name, price range, or category.
+-   Adding an additional table for categories and allow products to be assigned to categories.
+-   Endpoints to generate reports for inventory status, sales, or other relevant information.
 
-For example, if you are trying to get a user from the DB who is not found, and you want to send a 404 error, the code should look something like:
 
-```javascript
-const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
-const User = require('../models/User');
+Contributing
+------------
 
-const getUser = async (userId) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-};
-```
+Contributions are welcome! If you have any ideas, suggestions, or improvements, please submit a pull request.
 
-## Validation
+License
+-------
 
-Request data is validated using [Joi](https://joi.dev/). Check the [documentation](https://joi.dev/api/) for more details on how to write Joi validation schemas.
-
-The validation schemas are defined in the `src/validations` directory and are used in the routes by providing them as parameters to the `validate` middleware.
-
-```javascript
-const express = require('express');
-const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
-
-const router = express.Router();
-
-router.post('/users', validate(userValidation.createUser), userController.createUser);
-```
-
-## Authentication
-
-To require authentication for certain routes, you can use the `auth` middleware.
-
-```javascript
-const express = require('express');
-const auth = require('../../middlewares/auth');
-const userController = require('../../controllers/user.controller');
-
-const router = express.Router();
-
-router.post('/users', auth(), userController.createUser);
-```
-
-These routes require a valid JWT access token in the Authorization request header using the Bearer schema. If the request does not contain a valid access token, an Unauthorized (401) error is thrown.
-
-**Generating Access Tokens**:
-
-An access token can be generated by making a successful call to the register (`POST /v1/auth/register`) or login (`POST /v1/auth/login`) endpoints. The response of these endpoints also contains refresh tokens (explained below).
-
-An access token is valid for 30 minutes. You can modify this expiration time by changing the `JWT_ACCESS_EXPIRATION_MINUTES` environment variable in the .env file.
-
-**Refreshing Access Tokens**:
-
-After the access token expires, a new access token can be generated, by making a call to the refresh token endpoint (`POST /v1/auth/refresh-tokens`) and sending along a valid refresh token in the request body. This call returns a new access token and a new refresh token.
-
-A refresh token is valid for 30 days. You can modify this expiration time by changing the `JWT_REFRESH_EXPIRATION_DAYS` environment variable in the .env file.
-
-## Authorization
-
-The `auth` middleware can also be used to require certain rights/permissions to access a route.
-
-```javascript
-const express = require('express');
-const auth = require('../../middlewares/auth');
-const userController = require('../../controllers/user.controller');
-
-const router = express.Router();
-
-router.post('/users', auth('manageUsers'), userController.createUser);
-```
-
-In the example above, an authenticated user can access this route only if that user has the `manageUsers` permission.
-
-The permissions are role-based. You can view the permissions/rights of each role in the `src/config/roles.js` file.
-
-If the user making the request does not have the required permissions to access this route, a Forbidden (403) error is thrown.
-
-## Logging
-
-Import the logger from `src/config/logger.js`. It is using the [Winston](https://github.com/winstonjs/winston) logging library.
-
-Logging should be done according to the following severity levels (ascending order from most important to least important):
-
-```javascript
-const logger = require('<path to src>/config/logger');
-
-logger.error('message'); // level 0
-logger.warn('message'); // level 1
-logger.info('message'); // level 2
-logger.http('message'); // level 3
-logger.verbose('message'); // level 4
-logger.debug('message'); // level 5
-```
-
-In development mode, log messages of all severity levels will be printed to the console.
-
-In production mode, only `info`, `warn`, and `error` logs will be printed to the console.\
-It is up to the server (or process manager) to actually read them from the console and store them in log files.\
-This app uses pm2 in production mode, which is already configured to store the logs in log files.
-
-Note: API request information (request url, response code, timestamp, etc.) are also automatically logged (using [morgan](https://github.com/expressjs/morgan)).
-
-## Custom Mongoose Plugins
-
-The app also contains 2 custom mongoose plugins that you can attach to any mongoose model schema. You can find the plugins in `src/models/plugins`.
-
-```javascript
-const mongoose = require('mongoose');
-const { toJSON, paginate } = require('./plugins');
-
-const userSchema = mongoose.Schema(
-  {
-    /* schema definition here */
-  },
-  { timestamps: true }
-);
-
-userSchema.plugin(toJSON);
-userSchema.plugin(paginate);
-
-const User = mongoose.model('User', userSchema);
-```
-
-### toJSON
-
-The toJSON plugin applies the following changes in the toJSON transform call:
-
-- removes \_\_v, createdAt, updatedAt, and any schema path that has private: true
-- replaces \_id with id
-
-### paginate
-
-The paginate plugin adds the `paginate` static method to the mongoose schema.
-
-Adding this plugin to the `User` model schema will allow you to do the following:
-
-```javascript
-const queryUsers = async (filter, options) => {
-  const users = await User.paginate(filter, options);
-  return users;
-};
-```
-
-The `filter` param is a regular mongo filter.
-
-The `options` param can have the following (optional) fields:
-
-```javascript
-const options = {
-  sortBy: 'name:desc', // sort order
-  limit: 5, // maximum results per page
-  page: 2 // page number
-};
-```
-
-The plugin also supports sorting by multiple criteria (separated by a comma): `sortBy: name:desc,role:asc`
-
-The `paginate` method returns a Promise, which fulfills with an object having the following properties:
-
-```json
-{
-  "results": [],
-  "page": 2,
-  "limit": 5,
-  "totalPages": 10,
-  "totalResults": 48
-}
-```
-
-## Linting
-
-Linting is done using [ESLint](https://eslint.org/) and [Prettier](https://prettier.io).
-
-In this app, ESLint is configured to follow the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base) with some modifications. It also extends [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) to turn off all rules that are unnecessary or might conflict with Prettier.
-
-To modify the ESLint configuration, update the `.eslintrc.json` file. To modify the Prettier configuration, update the `.prettierrc.json` file.
-
-To prevent a certain file or directory from being linted, add it to `.eslintignore` and `.prettierignore`.
-
-To maintain a consistent coding style across different IDEs, the project contains `.editorconfig`
-
-## Contributing
-
-Contributions are more than welcome! Please check out the [contributing guide](CONTRIBUTING.md).
-
-## Inspirations
-
-- [RESTful API Node Server Boilerplate](https://github.com/hagopj13/node-express-boilerplate)
-
-## License
-
-[MIT](LICENSE)
+[MIT License]
